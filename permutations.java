@@ -1,4 +1,4 @@
-public class Classroom {
+public class permutations {
 
     public static void findP(String str, String ans) {
         // Base case
