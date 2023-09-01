@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class Trapping_Rainwater {
     public static int trappedRainwater(int height[]) { //O(n)
         int n= height.length;
