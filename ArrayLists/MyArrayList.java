@@ -66,5 +66,21 @@ public class MyArrayList {
         //Sorting Desc
         Collections.sort(list, Collections.reverseOrder());
         // Comparator - fnx logic
+
+        //Multidimensional
+        ArrayList<ArrayList<Integer>> mainList = new ArrayList<>();
+        ArrayList<Integer> list1 = new ArrayList<>();
+        list1.add(1); list.add(2);
+        mainList.add(list1);
+        ArrayList<Integer> list4 = new ArrayList<>();
+        list4.add(1); list4.add(2);
+        mainList.add(list4);
+        for(int i = 0; i<mainList.size(); i++){
+            ArrayList<Integer> currList = mainList.get(i);
+            for(int j =0; j<currList.size(); j++) {
+                System.out.println(currList.get(i) + " ");
+            }
+            System.out.println();
+        }
     }
 }
