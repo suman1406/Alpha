@@ -1,4 +1,5 @@
-class LinkedLists {
+// Note: This is the solution for the LinkedLists assignment. You can use this to test your code.
+public class LinkedLists {
     public static class Node {
         int data;
         Node next;
@@ -9,12 +10,11 @@ class LinkedLists {
         }
     }
 
-    public static Node head;
-    public static Node tail;
+    public Node head;
+    public Node tail;
     public int size;
 
     public void addFirst(int data) {
-        // step1 = create new node
         Node newNode = new Node(data);
         size++;
         if (head == null) {
@@ -22,25 +22,19 @@ class LinkedLists {
             return;
         }
 
-        // step 2 = newNode next = head
         newNode.next = head;
-
-        // step 3 -head = newNode
         head = newNode;
     }
 
     public void addLast(int data) {
-        // step-1=create a new node and assign it to the current last element of linked
-        // list or set as first element in case there is
         Node newNode = new Node(data);
         size++;
         if (head == null) {
             head = tail = newNode;
             return;
         }
-        // step 2 = tail.next = newNode
+
         tail.next = newNode;
-        // step 3 : tail = newNode
         tail = newNode;
     }
 
@@ -72,7 +66,6 @@ class LinkedLists {
             i++;
         }
 
-        // i = idx-1; temp->prev
         newNode.next = temp.next;
         temp.next = newNode;
     }
@@ -103,7 +96,6 @@ class LinkedLists {
             size = 0;
             return val;
         }
-        // prev : i = size-2
         Node prev = head;
         for (int i = 0; i < size - 2; i++) {
             prev = prev.next;
@@ -128,7 +120,6 @@ class LinkedLists {
             i++;
         }
 
-        // Key not found
         return -1;
     }
 
@@ -148,7 +139,7 @@ class LinkedLists {
         return idx + 1;
     }
 
-    public static int recSearch(int Key) {
+    public int recSearch(int Key) {
         return helper(head, Key);
     }
 
@@ -167,7 +158,6 @@ class LinkedLists {
     }
 
     public void deleteNthfromEnd(int n) {
-        // cal size
         int sz = 0;
         Node temp = head;
         while (temp != null) {
@@ -176,11 +166,10 @@ class LinkedLists {
         }
 
         if (n == sz) {
-            head = head.next; // removeFirst
+            head = head.next;
             return;
         }
 
-        // sz-n
         int i = 1;
         int iToFind = sz - n;
         Node prev = head;
@@ -193,14 +182,13 @@ class LinkedLists {
         return;
     }
 
-    // Slow Fast Approach
     public Node findMid(Node head) {
         Node slow = head;
         Node fast = head;
 
         while (fast != null && fast.next != null) {
             slow = slow.next;
-            fast = fast.next.next;// +2
+            fast = fast.next.next;
         }
         return slow;
     }
@@ -209,9 +197,7 @@ class LinkedLists {
         if (head == null || head.next == null) {
             return true;
         }
-        // step1 - find mid
         Node midNode = findMid(head);
-        // step2 - reverse 2nd half
         Node prev = null;
         Node curr = midNode;
         Node next;
@@ -221,8 +207,7 @@ class LinkedLists {
             prev = curr;
             curr = next;
         }
-        // step3 - check left half and right half
-        Node right = prev;// right half head
+        Node right = prev;
         Node left = head;
 
         while (right != null) {
@@ -236,22 +221,188 @@ class LinkedLists {
         return true;
     }
 
-    public static void main(System args[]) {
+    public boolean isCycle() {
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (fast == slow) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeCycle() {
+        Node slow = head;
+        Node fast = head;
+        boolean cycle = false;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (fast == slow) {
+                cycle = true;
+                break;
+            }
+        }
+        if (!cycle) {
+            return;
+        }
+
+        slow = head;
+        Node prev = null;
+        while (slow != fast) {
+            prev = fast;
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        prev.next = null;
+    }
+
+    private Node getMid(Node head) {
+        Node slow = head;
+        Node fast = head.next;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    private Node merge(Node head1, Node head2) {
+        Node mergedLL = new Node(-1);
+        Node temp = mergedLL;
+
+        while (head1 != null && head2 != null) {
+            if (head1.data <= head2.data) {
+                temp.next = head1;
+                head1 = head1.next;
+            } else {
+                temp.next = head2;
+                head2 = head2.next;
+            }
+            temp = temp.next;
+        }
+
+        while (head1 != null) {
+            temp.next = head1;
+            head1 = head1.next;
+            temp = temp.next;
+        }
+
+        while (head2 != null) {
+            temp.next = head2;
+            head2 = head2.next;
+            temp = temp.next;
+        }
+
+        return mergedLL.next;
+    }
+
+    public Node mergeSort(Node head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        Node mid = getMid(head);
+        Node rightHead = mid.next;
+        mid.next = null;
+        Node newLeft = mergeSort(head);
+        Node newRight = mergeSort(rightHead);
+
+        return merge(newLeft, newRight);
+    }
+
+    public void zigZag() {
+        // find mid
+        Node slow = head;
+        Node fast = head.next;
+        while(fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        Node mid = slow;
+
+        //reverse 2nd half
+        Node curr = mid.next;
+        Node prev = null;
+        Node next;
+
+        while(curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        Node left = head;
+        Node right = prev;
+        Node nextL, nextR;
+
+        //alt merge - zig-zag merge
+        while(left != null && right != null) {
+            nextL = left.next;
+            nextR = right.next;
+
+            left.next = right;
+            right.next = nextL;
+
+            left = nextL;
+            right = nextR;
+        }
+    }
+
+    public static void main(String args[]) {
         LinkedLists li = new LinkedLists();
-        li.print();
-        ;
+
+        // Test addFirst
         li.addFirst(1);
-        li.addFirst(2);
-        li.addLast(3);
-        li.addLast(4);
-        li.add(2, 9);
-        li.print();
-        System.out.println(li.size);
+        li.print(); // Output: 1->null
+
+        // Test addLast
+        li.addLast(2);
+        li.print(); // Output: 1->2->null
+
+        // Test add at index
+        li.add(1, 3);
+        li.print(); // Output: 1->3->2->null
+
+        // Test removeFirst
         li.removeFirst();
-        li.print();
-        System.out.println(li.itrSearch(5));
-        System.out.println(recSearch(5));
+        li.print(); // Output: 3->2->null
+
+        // Test iterative search
+        System.out.println(li.itrSearch(2)); // Output: 1 (index of 2 in the list)
+
+        // Test recursive search
+        System.out.println(li.recSearch(3)); // Output: 0 (index of 3 in the list)
+
+        // Test reverse
         li.reverse();
-        System.out.println(li.checkPalindrome());
+        li.print(); // Output: 2->3->null
+
+        // Test checkPalindrome
+        System.out.println(li.checkPalindrome()); // Output: false
+
+        // Test isCycle and removeCycle
+        System.out.println(li.isCycle()); // Output: false (no cycle in the list)
+        li.removeCycle(); // Should not affect the list
+        System.out.println(li.isCycle()); // Output: false (still no cycle)
+
+        // Test mergeSort
+        LinkedLists ll = new LinkedLists();
+        ll.addFirst(5);
+        ll.addFirst(3);
+        ll.addFirst(7);
+        ll.print(); // Output: 7->3->5->null
+        ll.head = ll.mergeSort(ll.head);
+        ll.print(); // Output: 3->5->7->null
     }
 }
