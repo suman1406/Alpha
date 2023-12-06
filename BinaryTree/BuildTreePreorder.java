@@ -3,13 +3,16 @@ import java.util.*;
 
 public class BuildTreePreorder {
     static class Node {
+
         int data;
         Node left;
+        int hd; // Horizontal distance
         Node right;
 
         Node(int data) {
             this.data = data;
             this.right = null;
+            hd = Integer.MAX_VALUE;
             this.left = null;
         }
     }
@@ -165,8 +168,8 @@ public class BuildTreePreorder {
             int[] rightAns = diameter2(root.right);
 
             int[] ans = new int[2];
-            ans[0] = Math.max(leftAns[0], Math.max(rightAns[0], leftAns[1] + rightAns[1] + 1));
-            ans[1] = Math.max(leftAns[1], rightAns[1]) + 1;
+            ans[0] = Math.max(leftAns[0], Math.max(rightAns[0], leftAns[1] + rightAns[1] + 1)); // diameter
+            ans[1] = Math.max(leftAns[1], rightAns[1]) + 1; // height
 
             return ans;
         }
@@ -208,7 +211,42 @@ public class BuildTreePreorder {
             return isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot);
         }
 
-        // Top View of a tree
+        // Top View of a tree using hashMap
+        public void topView2(Node root) {
+            if (root == null) {
+                return;
+            }
+
+            Queue<Node> q = new LinkedList<>();
+            root.hd = 0; // Initialize horizontal distance
+
+            HashMap<Integer, Integer> map = new HashMap<>();
+            q.add(root);
+
+            while (!q.isEmpty()) {
+                Node curr = q.poll();
+
+                if (!map.containsKey(curr.hd)) {
+                    map.put(curr.hd, curr.data);
+                }
+
+                if (curr.left != null) {
+                    curr.left.hd = curr.hd - 1;
+                    q.add(curr.left);
+                }
+
+                if (curr.right != null) {
+                    curr.right.hd = curr.hd + 1;
+                    q.add(curr.right);
+                }
+            }
+
+            for (int i : map.keySet()) {
+                System.out.print(map.get(i) + " ");
+            }
+        }
+        
+        // Top View of a tree using queue
         public void topView(Node root) {
             if(root == null) {
                 return;
@@ -229,6 +267,131 @@ public class BuildTreePreorder {
                     q.add(curr.right);
                 }
             }
+        }
+
+        // bottom view of a tree using maps
+        public void bottomView(Node root) {
+            if(root == null) {
+                return;
+            }
+
+            Queue<Node> q = new LinkedList<>();
+            q.add(root);
+
+            while(!q.isEmpty()) {
+                Node curr = q.poll();
+                System.out.print(curr.data + " ");
+
+                if(curr.left != null) {
+                    q.add(curr.left);
+                }
+
+                if(curr.right != null) {
+                    q.add(curr.right);
+                }
+            }
+        }
+
+        // Kth level
+        public void kthLevel(Node root, int k) {
+            if(root == null) {
+                return;
+            }
+
+            if(k == 0) {
+                System.out.print(root.data + " ");
+                return;
+            }
+
+            kthLevel(root.left, k - 1);
+            kthLevel(root.right, k - 1);
+        }
+
+        // Lowest Common Ancester
+        public Node LCA(Node root, int a, int b) {
+            if(root == null) {
+                return null;
+            }
+
+            if(root.data == a || root.data == b) {
+                return root;
+            }
+
+            Node leftLCA = LCA(root.left, a, b);
+            Node rightLCA = LCA(root.right, a, b);
+
+            if(leftLCA != null && rightLCA != null) {
+                return root;
+            }
+
+            if(leftLCA != null) {
+                return leftLCA;
+            }
+
+            return rightLCA;
+        }
+
+        // Distance between 2 nodes
+        public int distance(Node root, int a, int level) {
+            if(root == null) {
+                return -1;
+            }
+
+            if(root.data == a) {
+                return level;
+            }
+
+            int leftDistance = distance(root.left, a, level + 1);
+            int rightDistance = distance(root.right, a, level + 1);
+
+            return Math.max(leftDistance, rightDistance);
+        }
+
+        // Minimum distance between 2 nodes
+        public int minDistance(Node root, int a, int b) {
+            Node lca = LCA(root, a, b);
+
+            int leftDistance = distance(lca, a, 0);
+            int rightDistance = distance(lca, b, 0);
+
+            return leftDistance + rightDistance;
+        }
+
+        // Kth ancestor of a node
+        public Node kthAncestor(Node root, int a, int k) {
+            if(root == null) {
+                return null;
+            }
+
+            if(root.data == a || kthAncestor(root.left, a, k) != null || kthAncestor(root.right, a, k) != null) {
+                if(k == 0) {
+                    System.out.println(root.data);
+                }
+
+                return root;
+            }
+
+            return null;
+        }
+
+        // Transfor sum to tree
+        public Node transformSum(Node root) {
+            if(root == null) {
+                return null;
+            }
+
+            if(root.left == null && root.right == null) {
+                return root;
+            }
+
+            Node leftSum = transformSum(root.left);
+            Node rightSum = transformSum(root.right);
+
+            int temp = root.data;
+            root.data = leftSum.data + rightSum.data;
+            leftSum.data = temp;
+
+            return root;
         }
     }
 
@@ -268,5 +431,25 @@ public class BuildTreePreorder {
         System.out.println(tree.isSubtree(root, root));
 
         tree.topView(root);
+
+        System.out.println();
+
+        tree.bottomView(root);
+
+        System.out.println();
+
+        tree.kthLevel(root, 2);
+
+        System.out.println();
+
+        System.out.println(tree.LCA(root, 4, 5).data);
+
+        System.out.println(tree.distance(root, 4, 7));
+
+        System.out.println(tree.minDistance(root, 4, 5));
+
+        tree.kthAncestor(root, 5, 2);
+
+        tree.transformSum(root);
     }
 }
