@@ -1,7 +1,7 @@
 package BinaryTree;
 import java.util.*;
 
-public class BuildTreePreorder {
+public class BuildTreeExamples {
     static class Node {
 
         int data;
