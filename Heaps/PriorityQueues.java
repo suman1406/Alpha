@@ -2,19 +2,22 @@ package Heaps;
 import java.util.*;
 
 public class PriorityQueues {
-    static class Student {
+    static class Student implements Comparable<Student> {
         int rank;
         String name;
+
         public Student(String name, int rank) {
             this.name = name;
             this.rank = rank;
         }
 
-        //compare to
+        // CompareTo method
+        @Override
         public int compareTo(Student s2) {
             return this.rank - s2.rank;
         }
     }
+
     public static void main(String[] args) {
         PriorityQueue<Integer> pq = new PriorityQueue<Integer>();
         pq.add(10);
@@ -31,7 +34,7 @@ public class PriorityQueues {
 
         System.out.println(pq.peek());
 
-        while(!pq.isEmpty()) {
+        while (!pq.isEmpty()) {
             System.out.print(pq.poll() + " ");
         }
 
@@ -44,7 +47,7 @@ public class PriorityQueues {
         pq2.add(15);
         pq2.add(5);
 
-        while(!pq2.isEmpty()) {
+        while (!pq2.isEmpty()) {
             System.out.print(pq2.poll() + " ");
         }
 
@@ -56,7 +59,7 @@ public class PriorityQueues {
         pq3.add(new Student("C", 15));
         pq3.add(new Student("D", 5));
 
-        while(!pq3.isEmpty()) {
+        while (!pq3.isEmpty()) {
             Student s = pq3.poll();
             System.out.println(s.name + " " + s.rank);
         }
