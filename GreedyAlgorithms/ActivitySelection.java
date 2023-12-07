@@ -1,3 +1,4 @@
+package GreedyAlgorithms;
 import java.util.*;
 
 public class ActivitySelection {
