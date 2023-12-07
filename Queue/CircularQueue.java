@@ -10,7 +10,7 @@ public class CircularQueue {
 
         Queue(int n) {
             arr = new int[n];
-            size = 0;
+            size = n; // Set the correct value for size
             rear = -1;
             front = -1;
         }

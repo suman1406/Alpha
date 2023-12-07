@@ -68,7 +68,9 @@ public class DoubleLL {
         }
         int val = head.data;
         head = head.next;
-        head.prev = null;
+        if (head != null) {
+            head.prev = null;
+        }
         size--;
         return val;
     }
@@ -84,6 +86,7 @@ public class DoubleLL {
         }
         if (temp != null) {
             head = temp.prev;
+            tail = temp; // Set tail to the last node after reversing
         }
     }
 

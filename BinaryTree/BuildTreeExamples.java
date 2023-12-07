@@ -19,9 +19,10 @@ public class BuildTreeExamples {
 
     static class BinaryTree{
         static int idx = -1;
+        
         public Node buildTree(int nodes[]) {
             idx++;
-            if(nodes[idx] == -1) {
+            if (idx >= nodes.length || nodes[idx] == -1) {
                 return null;
             }
 
@@ -376,20 +377,23 @@ public class BuildTreeExamples {
 
         // Transfor sum to tree
         public Node transformSum(Node root) {
-            if(root == null) {
+            if (root == null) {
                 return null;
             }
 
-            if(root.left == null && root.right == null) {
-                return root;
+            if (root.left != null) {
+                Node leftSum = transformSum(root.left);
+                int temp = root.data;
+                root.data += leftSum.data;
+                leftSum.data = temp;
             }
 
-            Node leftSum = transformSum(root.left);
-            Node rightSum = transformSum(root.right);
-
-            int temp = root.data;
-            root.data = leftSum.data + rightSum.data;
-            leftSum.data = temp;
+            if (root.right != null) {
+                Node rightSum = transformSum(root.right);
+                int temp = root.data;
+                root.data += rightSum.data;
+                rightSum.data = temp;
+            }
 
             return root;
         }

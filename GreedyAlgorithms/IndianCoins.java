@@ -1,3 +1,5 @@
+package GreedyAlgorithms;
+
 public class IndianCoins {
     public static void main(String args[]) {
         //Indian Coins Question
